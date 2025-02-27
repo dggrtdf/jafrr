@@ -27,6 +27,7 @@
         header {
             padding: 2rem;
             border-bottom: 3px solid #0f0;
+            position: relative;
         }
 
         nav {
@@ -35,10 +36,17 @@
             align-items: center;
         }
 
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
         .nav-links a {
             color: #0f0;
             text-decoration: none;
             margin-left: 2rem;
+            position: relative;
         }
 
         .nav-links a:hover {
@@ -46,11 +54,45 @@
         }
 
         .hero {
+            height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
             text-align: center;
-            padding: 5rem 0;
         }
 
-        .features, .payment, .telegram {
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .matrix-effect {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        .terminal {
+            background: #000;
+            padding: 2rem;
+            border: 2px solid #0f0;
+            margin: 2rem;
+            max-width: 800px;
+        }
+
+        .terminal::before {
+            content: "root@zaeem:~#";
+            color: #0f0;
+            margin-right: 1rem;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
             padding: 2rem;
         }
 
@@ -58,8 +100,8 @@
             background: #111;
             padding: 2rem;
             border: 1px solid #0f0;
+            position: relative;
             transition: 0.3s;
-            text-align: center;
         }
 
         .card:hover {
@@ -67,18 +109,40 @@
             box-shadow: 0 0 20px #0f0;
         }
 
+        @keyframes glitch {
+            0% { transform: translate(0) }
+            20% { transform: translate(-2px, 2px) }
+            40% { transform: translate(-2px, -2px) }
+            60% { transform: translate(2px, 2px) }
+            80% { transform: translate(2px, -2px) }
+            100% { transform: translate(0) }
+        }
+
         .cyber-button {
             background: #000;
             border: 2px solid #0f0;
             color: #0f0;
             padding: 1rem 2rem;
+            font-size: 1.2rem;
             cursor: pointer;
+            position: relative;
+            overflow: hidden;
             margin-top: 2rem;
         }
 
         .cyber-button:hover {
             background: #0f0;
             color: #000;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
         }
     </style>
 </head>
@@ -93,8 +157,6 @@
                 <a href="#skills">المهارات</a>
                 <a href="#projects">المشاريع</a>
                 <a href="#contact">اتصل بي</a>
-                <a href="#payment">طرق الدفع</a>
-                <a href="#telegram">التليجرام</a>
             </div>
         </nav>
     </header>
@@ -108,28 +170,64 @@
         <button class="cyber-button">ابدأ الاختراق</button>
     </section>
 
-    <section id="payment" class="payment">
-        <h2>طرق الدفع</h2>
+    <section class="features">
         <div class="card">
-            <i class="fas fa-credit-card"></i>
-            <h3>الدفع عبر البطاقات</h3>
-            <p>Visa, MasterCard, PayPal</p>
+            <i class="fas fa-code"></i>
+            <h3>تطوير البرمجيات</h3>
+            <p>تطوير تطبيقات مخصصة بأعلى معايير الأمان</p>
         </div>
         <div class="card">
-            <i class="fab fa-bitcoin"></i>
-            <h3>الدفع عبر العملات الرقمية</h3>
-            <p>Bitcoin, Ethereum, USDT</p>
+            <i class="fas fa-shield-alt"></i>
+            <h3>أمن المعلومات</h3>
+            <p>اختبار الاختراق وتأمين الأنظمة</p>
+        </div>
+        <div class="card">
+            <i class="fas fa-terminal"></i>
+            <h3>الهاكينج الأخلاقي</h3>
+            <p>اكتشاف الثغرات وإصلاحها</p>
         </div>
     </section>
 
-    <section id="telegram" class="telegram">
-        <h2>تواصل عبر التليجرام</h2>
-        <div class="card">
-            <i class="fab fa-telegram"></i>
-            <h3>انضم إلى قناتنا</h3>
-            <p>للحصول على آخر الأخبار والخدمات، تابعنا على التليجرام.</p>
-            <a href="https://t.me/yourchannel" class="cyber-button">زيارة القناة</a>
-        </div>
-    </section>
+    <script>
+        // Matrix rain effect
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const chars = '01ZAeemHacker010101';
+        const drops = [];
+        
+        const fontSize = 14;
+        const columns = canvas.width/fontSize;
+
+        for(let x = 0; x < columns; x++) {
+            drops[x] = 1;
+        }
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = '#0F0';
+            ctx.font = fontSize + 'px monospace';
+
+            for(let i = 0; i < drops.length; i++) {
+                const text = chars[Math.floor(Math.random() * chars.length)];
+                ctx.fillText(text, i*fontSize, drops[i]*fontSize);
+                
+                if(drops[i]*fontSize > canvas.height && Math.random() > 0.975)
+                    drops[i] = 0;
+                drops[i]++;
+            }
+        }
+
+        setInterval(drawMatrix, 50);
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
 </body>
 </html>
